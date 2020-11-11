@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -161,6 +161,17 @@ public class PlayerModel
         pMove.Attack(input, timeDelta);
     }
 
+    private void playerDead()
+    {
+        if (Sqrt(velX * velX + velY * velY) < 0.25)
+        {
+            velX = 0;
+            velY = 0;
+            accX = 0;
+            accY = 0;
+        }
+    }
+
     public void Update(UserInput input, float timeDelta, double x, double y)
     {
         posX = x;
@@ -178,6 +189,9 @@ public class PlayerModel
                 break;
             case PState.Attacking:
                 playerAttack(input, timeDelta);
+                break;
+            case PState.Dead:
+                playerDead();
                 break;
         }
 
@@ -211,18 +225,7 @@ public class PlayerModel
     {
         if ((state == PState.Free || state == PState.Setting) && p2.state == PState.Attacking)
         {
-            if (p2.getMove() == Move.Charge)
-            {
-                collision(p2);
-            }
-            else if (p2.getMove() == Move.Block)
-            {
-                collision(p2);
-            }
-            else if (p2.getMove() == Move.Push)
-            {
-                collision(p2);
-            }
+            collision(p2);
         }
         else if (state == PState.Attacking && p2.state == PState.Attacking)
         {
@@ -242,5 +245,25 @@ public class PlayerModel
                 collision(p2);
             }
         }
+    }
+
+    public void playerKilled()
+    {
+        collider.enabled = false;
+        
+        double vX = velX;
+        double vY = velY;
+
+        Debug.Log(vX + " | " + vY);
+        
+        changeState(PState.Dead);
+        
+        velX = vX;
+        velY = vY;
+
+        double spd = Sqrt(velX * velX + velY * velY);
+        
+        accX = -velX / 0.5;
+        accY = -velY / 0.5;
     }
 }

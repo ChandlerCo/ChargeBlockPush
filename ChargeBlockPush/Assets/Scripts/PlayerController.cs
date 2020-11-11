@@ -116,6 +116,13 @@ public class PlayerController : MonoBehaviour
             PlayerModel p2 = collision.gameObject.GetComponent<PlayerController>().getPlayerData();
             playerData.Collide(p2);
         }
+    }
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
         
+        if (collision.gameObject.tag == "Boundary")
+        {
+            playerData.playerKilled();
+        }
     }
 }

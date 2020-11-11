@@ -6,7 +6,8 @@ public enum PState
     Free = 0,
     Setting = 1,
     Attacking = 2,
-    Stunned = 3
+    Stunned = 3,
+    Dead = 4
 }
 
 public enum Move
